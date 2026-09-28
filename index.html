@@ -147,4 +147,300 @@ button:hover{opacity:.9}
 
 <body>
 
-<header>
+<header>  <h1>Shahadat Ledger</h1>
+  <p>روزانہ آمدن اور خرچ کا حساب</p>
+</header>
+
+<div class="container">
+
+  <div class="cards">
+    <div class="card">
+      <small>کل آمدن</small>
+      <strong class="income" id="totalIncome">Rs 0</strong>
+    </div>
+
+    <div class="card">
+      <small>کل خرچ</small>
+      <strong class="expense" id="totalExpense">Rs 0</strong>
+    </div>
+
+    <div class="card">
+      <small>بقایا رقم</small>
+      <strong class="balance" id="balance">Rs 0</strong>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>نیا ریکارڈ شامل کریں</h2>
+
+    <div class="form-grid">
+      <div>
+        <label>قسم</label>
+        <select id="type">
+          <option value="income">آمدن</option>
+          <option value="expense">خرچ</option>
+        </select>
+      </div>
+
+      <div>
+        <label>رقم</label>
+        <input id="amount" type="number" min="0" placeholder="مثلاً 5000">
+      </div>
+
+      <div>
+        <label>تفصیل</label>
+        <input id="description" type="text" placeholder="مثلاً تنخواہ، راشن">
+      </div>
+
+      <div>
+        <label>تاریخ</label>
+        <input id="date" type="date">
+      </div>
+    </div>
+
+    <button onclick="addRecord()" style="margin-top:14px">
+      ریکارڈ محفوظ کریں
+    </button>
+
+    <div class="actions">
+      <button class="export" onclick="exportCSV()">CSV فائل بنائیں</button>
+      <button class="clear" onclick="clearAll()">تمام ریکارڈ حذف کریں</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>ریکارڈز</h2>
+
+    <input
+      class="search"
+      id="search"
+      type="text"
+      placeholder="ریکارڈ تلاش کریں..."
+      oninput="showRecords()"
+    >
+
+    <div class="count" id="count"></div>
+    <div id="records"></div>
+  </div>
+
+</div>
+
+<script>
+const STORAGE_KEY = "shahadatLedgerRecords";
+
+let records = JSON.parse(
+  localStorage.getItem(STORAGE_KEY) || "[]"
+);
+
+const dateInput = document.getElementById("date");
+
+const today = new Date();
+const yyyy = today.getFullYear();
+const mm = String(today.getMonth()+1).padStart(2,"0");
+const dd = String(today.getDate()).padStart(2,"0");
+
+dateInput.value = yyyy + "-" + mm + "-" + dd;
+
+function save(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+}
+
+function money(value){
+  return "Rs " + Number(value).toLocaleString("en-PK");
+}
+
+function addRecord(){
+  const type = document.getElementById("type").value;
+  const amount = Number(document.getElementById("amount").value);
+  const description = document.getElementById("description").value.trim();
+  const date = document.getElementById("date").value;
+
+  if(!amount || amount <= 0){
+    alert("براہ کرم صحیح رقم لکھیں۔");
+    return;
+  }
+
+  if(!description){
+    alert("براہ کرم تفصیل لکھیں۔");
+    return;
+  }
+
+  if(!date){
+    alert("براہ کرم تاریخ منتخب کریں۔");
+    return;
+  }
+
+  records.unshift({
+    id: Date.now(),
+    type:type,
+    amount:amount,
+    description:description,
+    date:date
+  });
+
+  save();
+
+  document.getElementById("amount").value = "";
+  document.getElementById("description").value = "";
+
+  showRecords();
+}
+
+function deleteRecord(id){
+  if(!confirm("کیا آپ یہ ریکارڈ حذف کرنا چاہتے ہیں؟")){
+    return;
+  }
+
+  records = records.filter(function(r){
+    return r.id !== id;
+  });
+
+  save();
+  showRecords();
+}
+
+function clearAll(){
+  if(records.length === 0){
+    alert("حذف کرنے کے لیے کوئی ریکارڈ نہیں ہے۔");
+    return;
+  }
+
+  if(!confirm("کیا آپ تمام ریکارڈ حذف کرنا چاہتے ہیں?")){
+    return;
+  }
+
+  records = [];
+  save();
+  showRecords();
+}
+
+function showRecords(){
+  const search =
+    document.getElementById("search").value.toLowerCase().trim();
+
+  const filtered = records.filter(function(r){
+    return (
+      r.description.toLowerCase().includes(search) ||
+      r.date.includes(search) ||
+      r.type.toLowerCase().includes(search)
+    );
+  });
+
+  const totalIncome = records
+    .filter(r => r.type === "income")
+    .reduce((sum,r) => sum + Number(r.amount),0);
+
+  const totalExpense = records
+    .filter(r => r.type === "expense")
+    .reduce((sum,r) => sum + Number(r.amount),0);
+
+  const balance = totalIncome - totalExpense;
+
+  document.getElementById("totalIncome").textContent =
+    money(totalIncome);
+
+  document.getElementById("totalExpense").textContent =
+    money(totalExpense);
+
+  document.getElementById("balance").textContent =
+    money(balance);
+
+  document.getElementById("count").textContent =
+    "کل ریکارڈ: " + records.length;
+
+  const container = document.getElementById("records");
+
+  if(filtered.length === 0){
+    container.innerHTML =
+      '<div class="empty">کوئی ریکارڈ موجود نہیں</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(function(r){
+    const isIncome = r.type === "income";
+
+    return `
+      <div class="record">
+        <div class="record-top">
+          <div>
+            <div class="record-title">
+              ${isIncome ? "آمدن" : "خرچ"}
+            </div>
+
+            <div class="record-date">
+              ${r.date}
+            </div>
+          </div>
+
+          <div class="record-amount ${isIncome ? "income" : "expense"}">
+            ${isIncome ? "+" : "-"} ${money(r.amount)}
+          </div>
+        </div>
+
+        <div class="record-desc">
+          ${escapeHTML(r.description)}
+        </div>
+
+        <button
+          class="delete"
+          onclick="deleteRecord(${r.id})">
+          حذف کریں
+        </button>
+      </div>
+    `;
+  }).join("");
+}
+
+function escapeHTML(text){
+  return text
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function exportCSV(){
+  if(records.length === 0){
+    alert("Export کرنے کے لیے کوئی ریکارڈ نہیں ہے۔");
+    return;
+  }
+
+  let csv = "\uFEFF";
+  csv += "قسم,رقم,تفصیل,تاریخ\n";
+
+  records.forEach(function(r){
+    const type = r.type === "income" ? "آمدن" : "خرچ";
+    const description =
+      '"' + r.description.replace(/"/g,'""') + '"';
+
+    csv +=
+      type + "," +
+      r.amount + "," +
+      description + "," +
+      r.date + "\n";
+  });
+
+  const blob = new Blob(
+    [csv],
+    {type:"text/csv;charset=utf-8;"}
+  );
+
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "shahadat-ledger.csv";
+
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  URL.revokeObjectURL(url);
+}
+
+showRecords();
+</script>
+
+</body>
+</html>
