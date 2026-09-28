@@ -3,65 +3,417 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Shahdat Supplier Ledger</title>
+<title>Shahadat Supplier Ledger</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#eef2f6;font-family:Arial;color:#172033}
-header{background:#1769aa;color:white;text-align:center;padding:20px 10px;border-radius:0 0 25px 25px}
-header h1{margin:0 0 6px;font-size:27px}
-.wrap{max-width:1100px;margin:auto;padding:12px}
-.box{background:white;border-radius:18px;padding:15px;margin:12px 0;box-shadow:0 2px 10px #0001}
-.info,.summary{display:grid;gap:10px}
-.info{grid-template-columns:2fr 1fr 1fr}
-.summary{grid-template-columns:repeat(3,1fr)}
-.card{background:#f7f9fc;border-radius:14px;padding:15px}
-.card small{display:block;color:#667085;font-weight:bold;font-size:15px}
-.card b{display:block;font-size:22px;margin-top:7px}
-.red{color:#b52d32}.green{color:#198754}.blue{color:#1769aa}
-.search{width:100%;padding:13px;border:1px solid #ccd3dc;border-radius:10px;font-size:16px}
+body{
+ margin:0;
+ background:#eef2f6;
+ font-family:Arial,sans-serif;
+ color:#172033;
+}
+header{
+ background:#1769aa;
+ color:white;
+ text-align:center;
+ padding:20px 10px;
+ border-radius:0 0 22px 22px;
+}
+header h1{margin:0 0 6px}
+.wrap{max-width:1200px;margin:auto;padding:12px}
+.box{
+ background:white;
+ border-radius:16px;
+ padding:14px;
+ margin:12px 0;
+ box-shadow:0 2px 10px #0001;
+}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+}
+.card{
+ background:#f7f9fc;
+ border-radius:12px;
+ padding:14px;
+}
+.card small{
+ display:block;
+ color:#667085;
+ font-weight:bold;
+}
+.card b{
+ display:block;
+ font-size:21px;
+ margin-top:6px;
+}
+.red{color:#b52d32}
+.green{color:#198754}
+.blue{color:#1769aa}
 .table{overflow:auto}
-table{width:100%;min-width:950px;border-collapse:collapse;font-size:13px}
-th{background:#1769aa;color:white;padding:10px}
-td{border:1px solid #d9dee5;padding:8px;vertical-align:top}
-tr:nth-child(even){background:#fafbfd}
-.num{text-align:right;white-space:nowrap}
-button{border:0;border-radius:7px;padding:8px 11px;color:white;font-weight:bold}
-.edit{background:#1769aa}.save{background:#198754}.cancel{background:#667085}
-.editbox{width:100%;padding:7px;border:1px solid #b9c2cc;border-radius:6px}
+table{
+ width:100%;
+ min-width:950px;
+ border-collapse:collapse;
+ font-size:13px;
+}
+th{
+ background:#1769aa;
+ color:white;
+ padding:9px;
+}
+td{
+ border:1px solid #d9dee5;
+ padding:7px;
+ vertical-align:top;
+}
+.num{
+ text-align:right;
+ white-space:nowrap;
+}
+.actions{
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap;
+}
+button{
+ border:0;
+ border-radius:8px;
+ padding:10px 13px;
+ color:white;
+ font-weight:bold;
+ background:#1769aa;
+}
+.greenbtn{background:#198754}
+.gray{background:#667085}
+.danger{background:#b52d32}
+input{
+ width:100%;
+ padding:10px;
+ border:1px solid #ccd3dc;
+ border-radius:8px;
+ font-size:15px;
+}
+.form{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+}
 @media(max-width:700px){
-.info,.summary{grid-template-columns:1fr}
-header h1{font-size:23px}
+ .grid,.form{grid-template-columns:1fr}
 }
 @media print{
-.noPrint{display:none!important}
-.box{box-shadow:none}
-table{min-width:0;font-size:9px}
+ .noPrint{display:none!important}
+ .box{box-shadow:none}
+ table{min-width:0;font-size:9px}
 }
 </style>
 </head>
 
 <body>
+
 <header>
-<h1>Mr.Shahdat Installer</h1>
-<div>Account No: 9028C</div>
-<div>Date From: 01/01/2025 to 30/04/2025</div>
+<h1>Shahadat Supplier Ledger</h1>
+<div>Delta Energy • Mr.Shahdat Installer • Account No. 9028C</div>
+<div>Statement: 01/01/2025 to 30/04/2025</div>
 </header>
 
 <div class="wrap">
 
-<div class="box info">
-<div class="card"><small>Supplier</small><b>Mr.Shahdat Installer</b></div>
-<div class="card"><small>Account No.</small><b>9028C</b></div>
-<div class="card"><small>Brought Forward</small><b class="red">-44,589.30</b></div>
+<div class="box grid">
+<div class="card">
+<small>Brought Forward</small>
+<b class="red">-44,589.30</b>
 </div>
 
-<div class="box summary">
-<div class="card"><small>Total Debit</small><b id="debit" class="red">0.00</b></div>
-<div class="card"><small>Total Credit</small><b id="credit" class="green">0.00</b></div>
-<div class="card"><small>Closing Balance</small><b id="closing" class="blue">0.00</b></div>
+<div class="card">
+<small>Total Debit</small>
+<b id="debit" class="red">0.00</b>
 </div>
 
-<div class="box noPrint">
-<input id="search" class="search" placeholder="Search details / Ref / V.No..." oninput="show()">
-<br><br>
-<button onclick="window.print()" style="background:#198754;width:100%;font-size:16px">
+<div class="card">
+<small>Total Credit</small>
+<b id="credit" class="green">0.00</b>
+</div>
+</div><div class="box noPrint">
+<h3>New Record</h3>
+
+<div class="form">
+<div>
+<label>Date</label>
+<input id="date" type="date">
+</div>
+
+<div>
+<label>Details</label>
+<input id="details" placeholder="Purchase Payment / Invoice">
+</div>
+
+<div>
+<label>Ref No.</label>
+<input id="ref" placeholder="Reference">
+</div>
+
+<div>
+<label>V. No.</label>
+<input id="vno" placeholder="Voucher No.">
+</div>
+
+<div>
+<label>Debit</label>
+<input id="debitInput" type="number" step="0.01" value="0">
+</div>
+
+<div>
+<label>Credit</label>
+<input id="creditInput" type="number" step="0.01" value="0">
+</div>
+</div>
+
+<br>
+
+<div class="actions">
+<button class="greenbtn" onclick="addRecord()">Add Record</button>
+<button class="gray" onclick="window.print()">Print / PDF</button>
+<button class="gray" onclick="exportCSV()">Export CSV</button>
+<button class="danger" onclick="resetData()">Reset</button>
+</div>
+</div>
+
+<div class="box">
+<h3>Supplier Statement</h3>
+
+<div class="table">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Details</th>
+<th>Ref No.</th>
+<th>V. No.</th>
+<th>Debit</th>
+<th>Credit</th>
+<th>Balance</th>
+<th class="noPrint">Action</th>
+</tr>
+</thead>
+
+<tbody id="ledger"></tbody>
+
+<tfoot>
+<tr>
+<th colspan="4">TOTAL</th>
+<th id="totalDebit" class="num">0.00</th>
+<th id="totalCredit" class="num">0.00</th>
+<th id="closing" class="num">0.00</th>
+<th class="noPrint"></th>
+</tr>
+</tfoot>
+</table>
+</div>
+</div><div class="box noPrint">
+<h3>New Record</h3>
+
+<div class="form">
+<div>
+<label>Date</label>
+<input id="date" type="date">
+</div>
+
+<div>
+<label>Details</label>
+<input id="details" placeholder="Purchase Payment / Invoice">
+</div>
+
+<div>
+<label>Ref No.</label>
+<input id="ref" placeholder="Reference">
+</div>
+
+<div>
+<label>V. No.</label>
+<input id="vno" placeholder="Voucher No.">
+</div>
+
+<div>
+<label>Debit</label>
+<input id="debitInput" type="number" step="0.01" value="0">
+</div>
+
+<div>
+<label>Credit</label>
+<input id="creditInput" type="number" step="0.01" value="0">
+</div>
+</div>
+
+<br>
+
+<div class="actions">
+<button class="greenbtn" onclick="addRecord()">Add Record</button>
+<button class="gray" onclick="window.print()">Print / PDF</button>
+<button class="gray" onclick="exportCSV()">Export CSV</button>
+<button class="danger" onclick="resetData()">Reset</button>
+</div>
+</div>
+
+<div class="box">
+<h3>Supplier Statement</h3>
+
+<div class="table">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Details</th>
+<th>Ref No.</th>
+<th>V. No.</th>
+<th>Debit</th>
+<th>Credit</th>
+<th>Balance</th>
+<th class="noPrint">Action</th>
+</tr>
+</thead>
+
+<tbody id="ledger"></tbody>
+
+<tfoot>
+<tr>
+<th colspan="4">TOTAL</th>
+<th id="totalDebit" class="num">0.00</th>
+<th id="totalCredit" class="num">0.00</th>
+<th id="closing" class="num">0.00</th>
+<th class="noPrint"></th>
+</tr>
+</tfoot>
+</table>
+</div>
+</div><script>
+const opening=-44589.30;
+
+let data=[
+["2025-01-02","Purchase Payment","","2921",30000,0],
+["2025-01-10","Purchase Invoice / Project Installation Labour / Aqeel Bukhari / 32,760.00 @ 1.50 = 49,140.00","","2910",0,49140],
+["2025-01-10","Purchase Invoice / Project Installation Labour / Asif Shopping Mall / 34,800.00 @ 2.50 = 87,000.00","","2911",0,87000],
+["2025-01-11","Purchase Payment","171306","2945",30000,0],
+["2025-01-11","Purchase Invoice / Honey Biscuit Factory P-6 / 1.00 @ 70,000.00 = 70,000.00","","2913",0,70000],
+["2025-01-23","Purchase Payment","218599","2972",50000,0],
+["2025-02-07","Purchase Invoice / Dubai Packages / Maintenance Work / 1.00 @ 18,000.00 = 18,000.00","","2949",0,18000],
+["2025-02-07","Purchase Invoice / Imran Shahid / 15,840.00 @ 2.75 = 43,560.00","","2950",0,43560],
+["2025-02-09","Purchase Payment","501857","3007",100000,0],
+["2025-02-22","Purchase Payment","792818","3053",50000,0],
+["2025-03-01","Purchase Payment","569773","3068",100000,0],
+["2025-03-03","Purchase Invoice / Dubai Packages P1 Extension / E+M / 58,000.00 @ 1.00 = 58,000.00","#226-25","3044",0,58000],
+["2025-03-03","Purchase Invoice / Abu Bkr bin Akaml / E+M / 10,530.00 @ 2.75 = 28,957.50","#225-25","3045",0,28957.50],
+["2025-03-03","Purchase Invoice / Irfan Ilahi Farm House / E Only Termination / 15,125.00 @ 1.50 = 22,687.50","#224-25","3046",0,22687.50],
+["2025-03-03","Purchase Invoice / Ch Nasir HH Food P-1 / 10,530.00 @ 2.75 = 28,957.50 / Discount Received = 7.50","#22-25","3047",0,28950],
+["2025-03-03","Purchase Invoice / Naeem Papar Factory / E+M / 60,000.00 @ 1.50 = 90,000.00","#222-25","3048",0,90000],
+["2025-03-03","Purchase Invoice / Daman Daal Factory / E+M / 100,000.00 @ 1.50 = 150,000.00","#221-25","3049",0,150000],
+["2025-03-03","Purchase Invoice / Sheikh Farukh Home / 10,890.00 @ 2.75 = 29,947.50","#220-25","3050",0,29947.50],
+["2025-03-03","Purchase Invoice / Discount Received = 7.50 / Ch Nasir HH Food P-2 / 10,530.00 @ 2.75 = 28,957.50","#219-25","3051",0,28950],
+["2025-03-14","Purchase Invoice / Mr Shan / 4,680.00 @ 2.50 = 11,700.00","","3101",0,11700],
+["2025-03-14","Purchase Invoice / Ashraf Ali / 8,190.00 @ 2.75 = 22,522.50","","3102",0,22522.50],
+["2025-03-14","Purchase Invoice / M Rameez / 8,190.00 @ 2.75 = 22,522.50","","3103",0,22522.50],
+["2025-03-20","Purchase Payment","260368","3159",100000,0],
+["2025-03-27","Purchase Payment","Cash","3196",10000,0],
+["2025-03-28","Purchase Payment","Cash","3200",100000,0],
+["2025-03-30","Purchase Payment","","3208",50000,0]
+];
+
+function money(n){
+ return Number(n).toLocaleString("en-US",
+ {minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function render(){
+ let html="";
+ let balance=opening;
+ let td=0,tc=0;
+
+ data.forEach((r,i)=>{
+   balance += Number(r[5])-Number(r[4]);
+   td += Number(r[4]);
+   tc += Number(r[5]);
+
+   html+=`
+   <tr>
+   <td>${r[0]}</td>
+   <td>${r[1]}</td>
+   <td>${r[2]}</td>
+   <td>${r[3]}</td>
+   <td class="num">${r[4]?money(r[4]):""}</td>
+   <td class="num">${r[5]?money(r[5]):""}</td>
+   <td class="num">${money(balance)}</td>
+   <td class="noPrint">
+   <button class="danger" onclick="deleteRecord(${i})">Delete</button>
+   </td>
+   </tr>`;
+ });
+
+ document.getElementById("ledger").innerHTML=html;
+ document.getElementById("debit").textContent=money(td);
+ document.getElementById("credit").textContent=money(tc);
+ document.getElementById("totalDebit").textContent=money(td);
+ document.getElementById("totalCredit").textContent=money(tc);
+ document.getElementById("closing").textContent=money(balance);
+}
+
+function addRecord(){
+ let d=document.getElementById("date").value;
+ let details=document.getElementById("details").value;
+ let ref=document.getElementById("ref").value;
+ let v=document.getElementById("vno").value;
+ let debit=Number(document.getElementById("debitInput").value)||0;
+ let credit=Number(document.getElementById("creditInput").value)||0;
+
+ if(!d || !details){
+   alert("Date aur Details zaroor likhein");
+   return;
+ }
+
+ data.push([d,details,ref,v,debit,credit]);
+ render();
+
+ document.getElementById("date").value="";
+ document.getElementById("details").value="";
+ document.getElementById("ref").value="";
+ document.getElementById("vno").value="";
+ document.getElementById("debitInput").value=0;
+ document.getElementById("creditInput").value=0;
+}
+
+function deleteRecord(i){
+ if(confirm("Is record ko delete karna hai?")){
+   data.splice(i,1);
+   render();
+ }
+}
+
+function resetData(){
+ if(confirm("Saare records reset karne hain?")){
+   location.reload();
+ }
+}
+
+function exportCSV(){
+ let csv="Date,Details,Ref No,V No,Debit,Credit,Balance\n";
+ let balance=opening;
+
+ data.forEach(r=>{
+   balance += Number(r[5])-Number(r[4]);
+   csv+=`"${r[0]}","${r[1].replace(/"/g,'""')}","${r[2]}","${r[3]}",${r[4]},${r[5]},${balance}\n`;
+ });
+
+ let blob=new Blob([csv],{type:"text/csv"});
+ let a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);
+ a.download="Shahadat-Supplier-Ledger.csv";
+ a.click();
+}
+
+render();
+</script>
+
+</body>
+</html>
