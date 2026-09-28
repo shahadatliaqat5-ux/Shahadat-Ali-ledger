@@ -1,437 +1,67 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shahadat Ledger</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shahdat Supplier Ledger</title>
 <style>
 *{box-sizing:border-box}
-
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#f3f6fa;
-color:#172033
+body{margin:0;background:#eef2f6;font-family:Arial;color:#172033}
+header{background:#1769aa;color:white;text-align:center;padding:20px 10px;border-radius:0 0 25px 25px}
+header h1{margin:0 0 6px;font-size:27px}
+.wrap{max-width:1100px;margin:auto;padding:12px}
+.box{background:white;border-radius:18px;padding:15px;margin:12px 0;box-shadow:0 2px 10px #0001}
+.info,.summary{display:grid;gap:10px}
+.info{grid-template-columns:2fr 1fr 1fr}
+.summary{grid-template-columns:repeat(3,1fr)}
+.card{background:#f7f9fc;border-radius:14px;padding:15px}
+.card small{display:block;color:#667085;font-weight:bold;font-size:15px}
+.card b{display:block;font-size:22px;margin-top:7px}
+.red{color:#b52d32}.green{color:#198754}.blue{color:#1769aa}
+.search{width:100%;padding:13px;border:1px solid #ccd3dc;border-radius:10px;font-size:16px}
+.table{overflow:auto}
+table{width:100%;min-width:950px;border-collapse:collapse;font-size:13px}
+th{background:#1769aa;color:white;padding:10px}
+td{border:1px solid #d9dee5;padding:8px;vertical-align:top}
+tr:nth-child(even){background:#fafbfd}
+.num{text-align:right;white-space:nowrap}
+button{border:0;border-radius:7px;padding:8px 11px;color:white;font-weight:bold}
+.edit{background:#1769aa}.save{background:#198754}.cancel{background:#667085}
+.editbox{width:100%;padding:7px;border:1px solid #b9c2cc;border-radius:6px}
+@media(max-width:700px){
+.info,.summary{grid-template-columns:1fr}
+header h1{font-size:23px}
 }
-
-header{
-background:#1769aa;
-color:white;
-padding:25px 15px;
-text-align:center;
-border-radius:0 0 20px 20px
-}
-
-header h1{
-margin:0 0 8px;
-font-size:30px
-}
-
-header p{
-margin:0;
-font-size:16px
-}
-
-.container{
-max-width:800px;
-margin:auto;
-padding:15px
-}
-
-.cards{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-margin:15px 0
-}
-
-.card{
-background:white;
-padding:16px 8px;
-border-radius:14px;
-text-align:center;
-box-shadow:0 2px 8px #0001
-}
-
-.card small{
-display:block;
-color:#667085
-}
-
-.card strong{
-display:block;
-font-size:20px;
-margin-top:6px
-}
-
-.income{color:#16803c}
-.expense{color:#c62828}
-.balance{color:#1769aa}
-
-.box{
-background:white;
-padding:18px;
-border-radius:15px;
-margin-bottom:15px;
-box-shadow:0 2px 8px #0001
-}
-
-h2{
-margin-top:0
-}
-
-label{
-display:block;
-font-weight:bold;
-margin:10px 0 5px
-}
-
-input,select,button{
-width:100%;
-padding:13px;
-font-size:16px;
-border-radius:10px;
-border:1px solid #ccd3dc
-}
-
-button{
-background:#1769aa;
-color:white;
-border:0;
-font-weight:bold;
-margin-top:12px
-}
-
-.actions{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px
-}
-
-.export{background:#16803c}
-.clear{background:#c62828}
-
-.record{
-background:#fff;
-border:1px solid #e1e5ea;
-border-radius:12px;
-padding:14px;
-margin-bottom:10px
-}
-
-.recordTop{
-display:flex;
-justify-content:space-between;
-gap:10px
-}
-
-.amount{
-font-size:18px;
-font-weight:bold
-}
-
-.date{
-font-size:13px;
-color:#667085;
-margin-top:4px
-}
-
-.description{
-margin-top:8px;
-color:#475467
-}
-
-.delete{
-width:auto;
-padding:8px 14px;
-background:#c62828;
-font-size:13px
-}
-
-.empty{
-text-align:center;
-color:#667085;
-padding:25px
-}
-
-@media(max-width:600px){
-.cards{
-grid-template-columns:1fr
-}
-
-.actions{
-grid-template-columns:1fr
-}
+@media print{
+.noPrint{display:none!important}
+.box{box-shadow:none}
+table{min-width:0;font-size:9px}
 }
 </style>
 </head>
 
 <body>
-
 <header>
-<h1>Shahadat Ledger</h1>
-<p>روزانہ آمدن اور خرچ کا حساب</p>
+<h1>Mr.Shahdat Installer</h1>
+<div>Account No: 9028C</div>
+<div>Date From: 01/01/2025 to 30/04/2025</div>
 </header>
 
-<div class="container">
+<div class="wrap">
 
-<div class="cards">
-
-<div class="card">
-<small>کل آمدن</small>
-<strong class="income" id="income">Rs 0</strong>
+<div class="box info">
+<div class="card"><small>Supplier</small><b>Mr.Shahdat Installer</b></div>
+<div class="card"><small>Account No.</small><b>9028C</b></div>
+<div class="card"><small>Brought Forward</small><b class="red">-44,589.30</b></div>
 </div>
 
-<div class="card">
-<small>کل خرچ</small>
-<strong class="expense" id="expense">Rs 0</strong>
+<div class="box summary">
+<div class="card"><small>Total Debit</small><b id="debit" class="red">0.00</b></div>
+<div class="card"><small>Total Credit</small><b id="credit" class="green">0.00</b></div>
+<div class="card"><small>Closing Balance</small><b id="closing" class="blue">0.00</b></div>
 </div>
 
-<div class="card">
-<small>بقایا رقم</small>
-<strong class="balance" id="balance">Rs 0</strong>
-</div>
-
-</div>
-
-<div class="box">
-
-<h2>نیا ریکارڈ</h2>
-
-<label>قسم</label>
-<select id="type">
-<option value="income">آمدن</option>
-<option value="expense">خرچ</option>
-</select>
-
-<label>رقم</label>
-<input id="amount" type="number" placeholder="مثلاً 5000">
-
-<label>تفصیل</label>
-<input id="description" type="text" placeholder="مثلاً تنخواہ، راشن">
-
-<label>تاریخ</label>
-<input id="date" type="date">
-
-<button onclick="addRecord()">ریکارڈ محفوظ کریں</button>
-
-<div class="actions">
-<button class="export" onclick="exportCSV()">CSV فائل بنائیں</button>
-<button class="clear" onclick="clearAll()">تمام ریکارڈ حذف کریں</button>
-</div>
-
-</div>
-
-<div class="box">
-
-<h2>ریکارڈز</h2>
-
-<input id="search" type="text"
-placeholder="ریکارڈ تلاش کریں..."
-oninput="showRecords()">
-
-<p id="count"></p>
-
-<div id="records"></div>
-
-</div>
-
-</div>
-
-<script>
-
-let records=JSON.parse(
-localStorage.getItem("shahadatLedger")||"[]"
-);
-
-document.getElementById("date").value=
-new Date().toISOString().split("T")[0];
-
-function save(){
-localStorage.setItem(
-"shahadatLedger",
-JSON.stringify(records)
-);
-}
-
-function money(n){
-return "Rs "+Number(n).toLocaleString("en-PK");
-}
-
-function addRecord(){
-
-let type=document.getElementById("type").value;
-let amount=Number(document.getElementById("amount").value);
-let description=document.getElementById("description").value.trim();
-let date=document.getElementById("date").value;
-
-if(amount<=0){
-alert("براہ کرم رقم لکھیں");
-return;
-}
-
-if(!description){
-alert("براہ کرم تفصیل لکھیں");
-return;
-}
-
-if(!date){
-alert("براہ کرم تاریخ منتخب کریں");
-return;
-}
-
-records.unshift({
-id:Date.now(),
-type:type,
-amount:amount,
-description:description,
-date:date
-});
-
-save();
-
-document.getElementById("amount").value="";
-document.getElementById("description").value="";
-
-showRecords();
-
-alert("ریکارڈ محفوظ ہوگیا");
-}
-
-function deleteRecord(id){
-
-if(!confirm("کیا یہ ریکارڈ حذف کرنا ہے؟")) return;
-
-records=records.filter(r=>r.id!==id);
-
-save();
-showRecords();
-}
-
-function clearAll(){
-
-if(records.length===0){
-alert("کوئی ریکارڈ موجود نہیں");
-return;
-}
-
-if(!confirm("کیا تمام ریکارڈ حذف کرنے ہیں؟")) return;
-
-records=[];
-save();
-showRecords();
-}
-
-function showRecords(){
-
-let search=document.getElementById("search").value
-.toLowerCase()
-.trim();
-
-let filtered=records.filter(r=>
-r.description.toLowerCase().includes(search) ||
-r.date.includes(search)
-);
-
-let income=records
-.filter(r=>r.type==="income")
-.reduce((a,r)=>a+Number(r.amount),0);
-
-let expense=records
-.filter(r=>r.type==="expense")
-.reduce((a,r)=>a+Number(r.amount),0);
-
-document.getElementById("income").textContent=money(income);
-document.getElementById("expense").textContent=money(expense);
-document.getElementById("balance").textContent=money(income-expense);
-
-document.getElementById("count").textContent=
-"کل ریکارڈ: "+records.length;
-
-let box=document.getElementById("records");
-
-if(filtered.length===0){
-box.innerHTML='<div class="empty">کوئی ریکارڈ موجود نہیں</div>';
-return;
-}
-
-box.innerHTML=filtered.map(r=>`
-
-<div class="record">
-
-<div class="recordTop">
-
-<div>
-<strong>${r.type==="income"?"آمدن":"خرچ"}</strong>
-<div class="date">${r.date}</div>
-</div>
-
-<div class="amount ${r.type==="income"?"income":"expense"}">
-${r.type==="income"?"+":"-"} ${money(r.amount)}
-</div>
-
-</div>
-
-<div class="description">${escapeHTML(r.description)}</div>
-
-<button class="delete"
-onclick="deleteRecord(${r.id})">
-حذف کریں
-</button>
-
-</div>
-
-`).join("");
-}
-
-function escapeHTML(text){
-return text
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-}
-
-function exportCSV(){
-
-if(records.length===0){
-alert("Export کرنے کے لیے کوئی ریکارڈ نہیں");
-return;
-}
-
-let csv="\uFEFFقسم,رقم,تفصیل,تاریخ\n";
-
-records.forEach(r=>{
-
-let type=r.type==="income"?"آمدن":"خرچ";
-let desc='"'+r.description.replace(/"/g,'""')+'"';
-
-csv+=type+","+r.amount+","+desc+","+r.date+"\n";
-
-});
-
-let blob=new Blob([csv],{
-type:"text/csv;charset=utf-8"
-});
-
-let url=URL.createObjectURL(blob);
-let a=document.createElement("a");
-
-a.href=url;
-a.download="shahadat-ledger.csv";
-
-document.body.appendChild(a);
-a.click();
-a.remove();
-
-URL.revokeObjectURL(url);
-}
-
-showRecords();
-
-</script>
-
-</body>
-</html>
+<div class="box noPrint">
+<input id="search" class="search" placeholder="Search details / Ref / V.No..." oninput="show()">
+<br><br>
+<button onclick="window.print()" style="background:#198754;width:100%;font-size:16px">
